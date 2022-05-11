@@ -24,17 +24,18 @@ int main(int argc, char* argv[])
 	
 	
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-	if(size%2!=0)
-	{
-		printf("The number of ranks must be even.\n");
-		exit(-1);
-	}
+    if(size%2!=0)
+    {
+	printf("The number of ranks must be even.\n");
+	exit(-1);
+    }
+
     // Get my rank
     int my_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
-       Kokkos::initialize(argc, argv);
-   {
+    Kokkos::initialize(argc, argv);
+    {
 
         myViewInt bufferSend,bufferRecv;
 	myMirrorViewInt Send,Recv;
@@ -50,49 +51,44 @@ int main(int argc, char* argv[])
 
 	Kokkos::fence();
 
+	printf("MPI process %d sends the value %d.\n", my_rank, Send(0));
+
+	MPI_Barrier(MPI_COMM_WORLD);
+
 	MPI_Request requestsSend[2];
 	MPI_Request requestsRecv[2];
 
-    if(my_rank <size/2)
-    {
-	// The MPI process sends the message.
-
+    	if(my_rank <size/2)
+    	{
+	    // The MPI process sends the message.      
         
-        printf("MPI process %d sends the value %d.\n", my_rank, Send(0));
-        MPI_Isend(bufferSend.data(), 1, MPI_INT, my_rank+size/2, 0, MPI_COMM_WORLD, &requestsSend[0]);
-	MPI_Isend(bufferSend.data(), 1, MPI_INT, size-1-my_rank, 0, MPI_COMM_WORLD, &requestsSend[1]);
+            MPI_Isend(bufferSend.data(), 1, MPI_INT, my_rank+size/2, 0, MPI_COMM_WORLD, &requestsSend[0]);
+	    MPI_Isend(bufferSend.data(), 1, MPI_INT, size-1-my_rank, 0, MPI_COMM_WORLD, &requestsSend[1]);
 
 
-// The MPI processes receive the message.       	
-	MPI_Request status[2];
-        MPI_Irecv(bufferRecv.data(), 1, MPI_INT, my_rank+size/2, 0, MPI_COMM_WORLD, &requestsRecv[0]);
-	MPI_Irecv(bufferRecv.data()+1, 1, MPI_INT, size-1-my_rank, 0, MPI_COMM_WORLD, &requestsRecv[1]);
+	    // The MPI processes receive the message.       	
+	    MPI_Request status[2];
+            MPI_Irecv(bufferRecv.data(), 1, MPI_INT, my_rank+size/2, 0, MPI_COMM_WORLD, &requestsRecv[0]);
+	    MPI_Irecv(bufferRecv.data()+1, 1, MPI_INT, size-1-my_rank, 0, MPI_COMM_WORLD, &requestsRecv[1]);	
 
-	
+	    Kokkos::deep_copy(Recv,bufferRecv);
+            printf("Process %d received value %d from %d and value %d from %d.\n", my_rank, Recv(0),my_rank+size/2,Recv(1),size-1-my_rank);    
+    	}
+    	else
+    	{
 
-	Kokkos::deep_copy(Recv,bufferRecv);
-        printf("Process %d received value %d from %d and value %d from %d.\n", my_rank, Recv(0),my_rank+size/2,Recv(1),size-1-my_rank);
+	    // The MPI process sends the message.
 
-        
-    }
-    else
-    {
+            MPI_Isend(bufferSend.data(), 1, MPI_INT, my_rank-size/2, 0, MPI_COMM_WORLD, &requestsSend[0]);
+	    MPI_Isend(bufferSend.data(), 1, MPI_INT, size-1-my_rank, 0, MPI_COMM_WORLD, &requestsSend[1]);
 
-// The MPI process sends the message.
+            // The MPI processes receive the message.       	
+            MPI_Irecv(bufferRecv.data(), 1, MPI_INT, my_rank-size/2, 0, MPI_COMM_WORLD, &requestsRecv[0]);
+	    MPI_Irecv(bufferRecv.data()+1, 1, MPI_INT, size-1-my_rank, 0, MPI_COMM_WORLD, &requestsRecv[1]);
 
-  
-        printf("MPI process %d sends the value %d.\n", my_rank, Send(0));
-        MPI_Isend(bufferSend.data(), 1, MPI_INT, my_rank-size/2, 0, MPI_COMM_WORLD, &requestsSend[0]);
-	MPI_Isend(bufferSend.data(), 1, MPI_INT, size-1-my_rank, 0, MPI_COMM_WORLD, &requestsSend[1]);
-
-        // The MPI processes receive the message.       	
-        MPI_Irecv(bufferRecv.data(), 1, MPI_INT, my_rank-size/2, 0, MPI_COMM_WORLD, &requestsRecv[0]);
-	MPI_Irecv(bufferRecv.data()+1, 1, MPI_INT, size-1-my_rank, 0, MPI_COMM_WORLD, &requestsRecv[1]);
-
-
-	Kokkos::deep_copy(Recv,bufferRecv);
-        printf("Process %d received value %d from %d and value %d from %d.\n", my_rank, Recv(0),my_rank-size/2,Recv(1),size-1-my_rank);
-    }
+	    Kokkos::deep_copy(Recv,bufferRecv);
+            printf("Process %d received value %d from %d and value %d from %d.\n", my_rank, Recv(0),my_rank-size/2,Recv(1),size-1-my_rank);
+    	}
 	
 	MPI_Barrier(MPI_COMM_WORLD);
 
@@ -103,8 +99,8 @@ int main(int argc, char* argv[])
 	MPI_Waitall(2, requestsRecv, MPI_STATUSES_IGNORE);
         printf("Process %d: both messages have been received.\n", my_rank);
 
-	}
-	Kokkos::finalize();
+    }
+    Kokkos::finalize();
 
 
     MPI_Finalize();
