@@ -13,7 +13,7 @@ default: waitall_ex
 
 
 USERFLAGS = -O3 -fsycl -fsycl-targets=nvptx64-nvidia-cuda-sycldevice -Wno-unknown-cuda-version
-#USERFLAGS = -DUSE_CUDA
+#USERFLAGS = -DUSE_CUDA -O3
 USERFLAGS += -g -std=c++17 -I../   
 CXXFLAGS = $(USERFLAGS)
 LINKFLAGS = $(USERFLAGS)
