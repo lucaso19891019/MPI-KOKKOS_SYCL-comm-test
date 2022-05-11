@@ -21,4 +21,4 @@ This is a test for the communication problem of MPI+KOKKOS_SYCL
 	make
 8. Run
 
-	mpirun -n {even number or ranks} ./waiall_ex
+	mpirun -n {even number of ranks} ./waiall_ex
