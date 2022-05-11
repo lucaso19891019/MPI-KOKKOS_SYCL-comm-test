@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 	Send=Kokkos::create_mirror_view(bufferSend);
 	Recv=Kokkos::create_mirror_view(bufferRecv);
 	
-	Send(1)=my_rank;
+	Send(0)=my_rank;
 	Kokkos::deep_copy(bufferSend,Send);
 
 	Kokkos::fence();
