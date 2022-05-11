@@ -15,6 +15,7 @@ This is a test for the communication problem of MPI+KOKKOS_SYCL
   git clone https://github.com/lucaso19891019/MPI-KOKKOS_SYCL-comm-test
 
   cd  MPI-KOKKOS_SYCL-comm-test
+  
 7. Compile
 
 	make
