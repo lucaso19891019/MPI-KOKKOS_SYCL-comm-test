@@ -25,8 +25,11 @@ This is a test for the communication problem of MPI+KOKKOS_SYCL
 
 
 To run with CUDA backend
+
 1. Login to ThetaGPU Compute node (Interactive).
+
 2. Download Kokkos
+
    cd ~
   
    mkdir kokkos
