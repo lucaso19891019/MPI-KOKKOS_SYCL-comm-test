@@ -3,8 +3,11 @@
 #include <mpi.h>
 
 #include <Kokkos_Core.hpp>
+#ifdef USE_CUDA
+#define myDeviceMemorySpace Kokkos::CudaSpace
+#else
 #define myDeviceMemorySpace Kokkos::Experimental::SYCLDeviceUSMSpace
-#define myPolicy Kokkos::RangePolicy<myDeviceMemorySpace::execution_space>
+#endif
 #define myViewInt Kokkos::View<int *, myDeviceMemorySpace>
 #define myMirrorViewInt Kokkos::View<int *, myDeviceMemorySpace>::HostMirror
 
@@ -30,8 +33,8 @@ int main(int argc, char* argv[])
     int my_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
-    //CudaComm* cudacomm;
-
+       Kokkos::initialize(argc, argv);
+   {
 
         myViewInt bufferSend,bufferRecv;
 	myMirrorViewInt Send,Recv;
@@ -46,7 +49,7 @@ int main(int argc, char* argv[])
 	Kokkos::deep_copy(bufferSend,Send);
 
 	Kokkos::fence();
-	
+
     if(my_rank <size/2)
     {
 	// The MPI process sends the message.
@@ -94,6 +97,8 @@ int main(int argc, char* argv[])
     }
 
 	
+	}
+	Kokkos::finalize();
 
 
     MPI_Finalize();
