@@ -12,9 +12,9 @@ This is a test for the communication problem of MPI+KOKKOS_SYCL
 5. cd ~
 6. Download tests
 
-  git clone https://github.com/lucaso19891019/MPI-KOKKOS_SYCL-comm-test
+   git clone https://github.com/lucaso19891019/MPI-KOKKOS_SYCL-comm-test
 
-  cd  MPI-KOKKOS_SYCL-comm-test
+   cd  MPI-KOKKOS_SYCL-comm-test
   
 7. Compile
 
