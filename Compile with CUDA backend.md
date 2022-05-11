@@ -1,1 +1,53 @@
-1. Login to 
+1. Login to ThetaGPU Compute node (Interactive).
+2. Download Kokkos
+  cd ~
+  
+  mkdir kokkos
+  
+  cd kokkos
+  
+  git clone https://github.com/kokkos/kokkos.git
+  
+3. Building Kokkos on the ThetaGPU node
+  
+  mkdir build
+  
+  cd build
+  
+  module load cmake
+  
+  module load openmpi
+  
+  cmake ../kokkos \
+  
+    -D CMAKE_CXX_FLAGS=-fopenmp \
+    
+    -D CMAKE_BUILD_TYPE=Release \
+    
+    -D CMAKE_INSTALL_PREFIX="${PWD}"/install \
+    
+    -D Kokkos_ENABLE_CUDA=On \
+    
+    -D Kokkos_ENABLE_CUDA_LAMBDA=On \
+    
+    -D Kokkos_ENABLE_SERIAL=On \
+    
+    -D Kokkos_ENABLE_OPENMP=On \
+    
+    -D CMAKE_CXX_STANDARD=17
+    
+  make -j install
+  
+  export CMAKE_PREFIX_PATH="${PWD}"/install:"${CMAKE_PREFIX_PATH}"
+  
+  export OMPI_CXX=~/kokkos/kokkos/bin/nvcc_wrapper
+  
+  export OMP_PLACES=threads
+  
+  export OMP_PROC_BIND=spread
+  
+4. Download test
+  
+  cd ~
+  
+  
