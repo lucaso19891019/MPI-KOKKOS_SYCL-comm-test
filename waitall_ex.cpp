@@ -19,7 +19,7 @@
 int main(int argc, char* argv[])
 {
     MPI_Init(&argc, &argv);
-    // Get the number of processes and check only 3 processes are used
+    // Get the number of processes and check if even number of processes are used
     int size;
 	
 	
