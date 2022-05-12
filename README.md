@@ -2,9 +2,12 @@
 This is a test for the communication problem of MPI+KOKKOS_SYCL
 
 1. Access ThetaGPU compute node (Interactive).
-2. cd /grand/catalyst/world-shared/spatel
-3. source set_DPCPP_env.sh
-4. Setup OMPI
+2.
+   ```
+   cd /grand/catalyst/world-shared/spatel
+   ```
+4. source set_DPCPP_env.sh
+5. Setup OMPI
 
    module load openmpi
    
