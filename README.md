@@ -5,26 +5,27 @@ This is a test for the communication problem of MPI+KOKKOS_SYCL
 2.
    ```
    cd /grand/catalyst/world-shared/spatel
+   source set_DPCPP_env.sh
    ```
-4. source set_DPCPP_env.sh
-5. Setup OMPI
-
-   module load openmpi
-   
+3. Setup OMPI
+   ```
+   module load openmpi  
    export OMPI_CXX=clang++
-5. cd ~
-6. Download tests
-
+   ```
+4. Download tests
+   ```
+   cd ~
    git clone https://github.com/lucaso19891019/MPI-KOKKOS_SYCL-comm-test
-
    cd  MPI-KOKKOS_SYCL-comm-test
-  
+   ```
 7. Compile
-
-	make
+   ```
+   make
+   ```
 8. Run
-
-	mpirun -n {even number of ranks} ./waitall_ex
+   ```
+   mpirun -n {even number of ranks} ./waitall_ex
+   ```
 
 
 To run with CUDA backend
