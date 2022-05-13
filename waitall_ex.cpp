@@ -67,7 +67,6 @@ int main(int argc, char* argv[])
 
 
 	    // The MPI processes receive the message.       	
-	    MPI_Request status[2];
             MPI_Irecv(bufferRecv.data(), 1, MPI_INT, my_rank+size/2, 0, MPI_COMM_WORLD, &requestsRecv[0]);
 	    MPI_Irecv(bufferRecv.data()+1, 1, MPI_INT, size-1-my_rank, 0, MPI_COMM_WORLD, &requestsRecv[1]);	
 
